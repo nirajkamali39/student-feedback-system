@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Manage Semesters</h2>
+<form method="POST">
+    <label>Name:</label><input type="text" name="name" required><br>
+    <label>Start Date:</label><input type="date" name="start_date" required><br>
+    <label>End Date:</label><input type="date" name="end_date" required><br>
+    <button type="submit">Add Semester</button>
+</form>
+<hr>
+<h3>Semester List</h3>
+<table border="1">
+    <tr>
+        <th>Name</th><th>Start Date</th><th>End Date</th><th>Action</th>
+    </tr>
+    {% for semester in semesters %}
+    <tr>
+        <td>{{ semester[1] }}</td>
+        <td>{{ semester[2] }}</td>
+        <td>{{ semester[3] }}</td>
+        <td>
+            <a href="{{ url_for('delete_semester', id=semester[0]) }}" onclick="return confirm('Delete this semester?');">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %} 

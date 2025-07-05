@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Student Performance Report{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-card {
+        transition: transform 0.3s;
+    }
+    .stats-card:hover {
+        transform: translateY(-5px);
+    }
+    .rating-high {
+        color: #28a745;
+    }
+    .rating-medium {
+        color: #ffc107;
+    }
+    .rating-low {
+        color: #dc3545;
+    }
+    .trend-up {
+        color: #28a745;
+    }
+    .trend-down {
+        color: #dc3545;
+    }
+    .chart-container {
+        position: relative;
+        height: 400px;
+        margin-bottom: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-4 text-center mb-4">
+            <i class="fas fa-chart-line"></i> Student Performance Report
+        </h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    {% for data in performance_data %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card stats-card h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">{{ data[1] }}</h5>
+                <small class="text-white-50">{{ data[2] }}</small>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <h6>Average Rating</h6>
+                        <h3 class="
+                            {% if data[4] >= 4 %}rating-high
+                            {% elif data[4] >= 3 %}rating-medium
+                            {% else %}rating-low{% endif %}
+                        ">
+                            {{ data[4] if data[4] else 'N/A' }}
+                            <small>/5</small>
+                        </h3>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>Total Feedback</h6>
+                        <h3>{{ data[3] }}</h3>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h6>High Ratings (4-5)</h6>
+                        <h4 class="rating-high">{{ data[5] }}</h4>
+                    </div>
+                    <div class="col-6">
+                        <h6>Low Ratings (1-2)</h6>
+                        <h4 class="rating-low">{{ data[6] }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-chart-bar"></i> Monthly Rating Trends
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Month</th>
+                                <th>Average Rating</th>
+                                <th>Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for trend in monthly_trends %}
+                            <tr>
+                                <td>{{ trend[0] }}</td>
+                                <td>{{ trend[1] }}</td>
+                                <td>{{ trend[2] }}/5</td>
+                                <td>
+                                    {% if loop.index > 1 and trend[0] == monthly_trends[loop.index-2][0] %}
+                                        {% if trend[2] > monthly_trends[loop.index-2][2] %}
+                                            <i class="fas fa-arrow-up trend-up"></i>
+                                        {% elif trend[2] < monthly_trends[loop.index-2][2] %}
+                                            <i class="fas fa-arrow-down trend-down"></i>
+                                        {% else %}
+                                            <i class="fas fa-equals text-muted"></i>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not performance_data %}
+<div class="alert alert-info text-center">
+    <i class="fas fa-info-circle"></i> No performance data available yet.
+</div>
+{% endif %}
+{% endblock %} 

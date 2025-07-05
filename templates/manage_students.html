@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Manage Students</h2>
+<form method="POST">
+    <label>Name:</label><input type="text" name="name" required><br>
+    <label>Email:</label><input type="email" name="email" required><br>
+    <label>Department:</label><input type="text" name="department" required><br>
+    <label>Enrollment Date:</label><input type="date" name="enrollment_date" required><br>
+    <button type="submit">Add Student</button>
+</form>
+<hr>
+<h3>Student List</h3>
+<table border="1">
+    <tr>
+        <th>Name</th><th>Email</th><th>Department</th><th>Enrollment Date</th><th>Action</th>
+    </tr>
+    {% for student in students %}
+    <tr>
+        <td>{{ student[1] }}</td>
+        <td>{{ student[2] }}</td>
+        <td>{{ student[3] }}</td>
+        <td>{{ student[4] }}</td>
+        <td>
+            <a href="{{ url_for('delete_student', id=student[0]) }}" onclick="return confirm('Delete this student?');">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %} 
